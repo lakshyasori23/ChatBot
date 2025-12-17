@@ -1,0 +1,377 @@
+:root {
+    --bg-color: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --accent-glow: rgba(66, 133, 244, 0.15);
+    /* Soft Google-ish Blue */
+    --accent-glow-secondary: rgba(156, 39, 176, 0.15);
+    /* Soft Purple */
+    --surface-light: rgba(255, 255, 255, 0.08);
+    --surface-lighter: rgba(255, 255, 255, 0.12);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --font-family: 'Inter', sans-serif;
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Prevent body scroll, handle in chat container */
+    /* Subtle background gradient mesh */
+    background-image:
+        radial-gradient(circle at 20% 30%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, var(--accent-glow-secondary) 0%, transparent 50%);
+    background-attachment: fixed;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header styles removed */
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Centered initially */
+    align-items: center;
+    text-align: center;
+    gap: 32px;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.main-content.has-chat {
+    justify-content: flex-end;
+    /* Push content to bottom when chatting */
+    padding-bottom: 20px;
+}
+
+/* Chat History */
+.chat-history {
+    width: 100%;
+    max-width: 800px;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: var(--surface-light) transparent;
+}
+
+.chat-history.hidden {
+    display: none;
+}
+
+.message {
+    display: flex;
+    gap: 16px;
+    padding: 0 10px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.message-content {
+    max-width: 80%;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+/* Message Content Styling - The "100x" Improvement */
+.message-content {
+    max-width: 85%;
+    /* Slightly wider */
+    line-height: 1.7;
+    /* Better readability */
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    word-wrap: break-word;
+}
+
+.message.user .message-content {
+    background: var(--surface-lighter);
+    padding: 14px 24px;
+    border-radius: 24px 24px 4px 24px;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.message.ai .message-content {
+    text-align: left;
+    padding-right: 12px;
+}
+
+/* Markdown Styles */
+.message-content h1,
+.message-content h2,
+.message-content h3 {
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.message-content h1 {
+    font-size: 1.5em;
+}
+
+.message-content h2 {
+    font-size: 1.3em;
+}
+
+.message-content h3 {
+    font-size: 1.1em;
+}
+
+.message-content p {
+    margin-bottom: 16px;
+}
+
+.message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.message-content ul,
+.message-content ol {
+    margin-left: 24px;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.message-content li {
+    margin-bottom: 8px;
+    padding-left: 4px;
+}
+
+.message-content strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.message-content a {
+    color: #4285f4;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(66, 133, 244, 0.4);
+    transition: var(--transition);
+}
+
+.message-content a:hover {
+    border-bottom-color: #4285f4;
+}
+
+/* Code Blocks */
+.message-content pre {
+    background: #1e1e1e;
+    /* Atom One Dark bg */
+    border-radius: 12px;
+    margin: 16px 0;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.message-content code {
+    font-family: 'Fira Code', 'Roboto Mono', monospace;
+    font-size: 0.9em;
+}
+
+.message-content :not(pre)>code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #e0e0e0;
+}
+
+.message-content pre code {
+    display: block;
+    padding: 16px;
+    background: transparent;
+    /* Let highlight.js handle it or parent */
+}
+
+/* Loading Animation Pulse */
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}
+
+.message.ai.loading .message-content {
+    animation: pulse 1.5s infinite ease-in-out;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+/* Greeting */
+.greeting-section {
+    transition: opacity 0.5s ease;
+}
+
+.greeting-section.hidden {
+    display: none;
+}
+
+.greeting-section h1 {
+    font-size: 3.5rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    background: linear-gradient(to right, #fff, #a1a1aa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.greeting-section .subtitle {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Input Bar */
+.input-container {
+    width: 100%;
+    max-width: 720px;
+    position: relative;
+    z-index: 10;
+}
+
+.input-wrapper {
+    background: rgba(30, 30, 30, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: var(--transition);
+}
+
+.input-wrapper:focus-within {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(40, 40, 40, 0.8);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+#user-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    padding: 8px 0;
+    outline: none;
+}
+
+#user-input::placeholder {
+    color: #666;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.icon-btn:hover {
+    background: var(--surface-light);
+    color: var(--text-primary);
+}
+
+.send-btn {
+    background: var(--surface-light);
+    color: var(--text-primary);
+}
+
+.send-btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* Suggestion Styles Removed */
+
+/* Footer */
+.footer-info {
+    padding: 16px 0;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #444;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.greeting-section {
+    animation: fadeIn 0.8s ease-out;
+}
+
+.input-container {
+    animation: fadeIn 0.8s ease-out 0.2s backwards;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .greeting-section h1 {
+        font-size: 2.5rem;
+    }
+
+    .input-wrapper {
+        padding: 8px 12px;
+    }
+}
